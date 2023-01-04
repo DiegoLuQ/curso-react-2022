@@ -1,42 +1,17 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import Card from "./components/Card";
-import axios from "axios"
-
+import { Outlet } from "react-router-dom"
+import Menu from "./components/menu/Menu"
+import { Navigate } from "react-router-dom";
 function App() {
-  const API_URL = import.meta.env.VITE_API_URL;
 
-  const [criptos, setCriptos] = useState();
-
-  useEffect(() => {
-    axios.get(`${API_URL}` + "assets")
-      .then((data) => {
-        console.log(data);
-        setCriptos(data.data.data);
-      })
-      .catch(() => {
-        console.error("La peticion fallo");
-      });
-  }, []);
-
-  if (!criptos)
-    return (
-      <>
-        <span>Cargando...</span>
-      </>
-    );
+  // sino tengo el token tokenEDmarket lleva al login
+  if (!localStorage.getItem("tokenEDmarket")) return <Navigate to="/login"/>
 
   return (
     <>
-      <h1>Lista de criptomonedas</h1>
-      <ol>
-        {criptos.map(({id, name, priceUsd, symbol }) => (
-          <Card id={id} name={name} priceUsd={priceUsd} key={id} symbol={symbol} />
-        ))}
-      </ol>
-      
-    </>
-  );
+            <Menu />
+            <Outlet />
+        </>
+  )
 }
 
-export default App;
+export default App
